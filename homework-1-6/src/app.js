@@ -29,7 +29,10 @@ var globalErrorHandler = async (ctx, next) => {
   } catch (err) {
 	if (err instanceof ValidErr) {
 	  ctx.status = err.code
-	  ctx.body = err.msg
+	  ctx.body = {
+	    code: err.code,
+		msg: err.msg
+	  }
 	  return
 	}
     ctx.status = 500
