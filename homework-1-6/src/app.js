@@ -10,8 +10,8 @@ router.post('/api/user', async (ctx, next) => {
   const data = parseJson(reqData)
   
   assertNotNull(data, 404, '请输入json格式数据')
-  assertNotNull(data.name, 404, 'name不能为空')
-  assertNotNull(data.email, 404, 'email不能为空')
+  assertNotEmptyStr(data.name, 404, 'name不能为空')
+  assertNotEmptyStr(data.email, 404, 'email不能为空')
   
   assertEqual(ctx.header.role, 'admin', 401, 'unauthorized post')
 
@@ -54,6 +54,12 @@ function assertNotNull(val, code, msg) {
 }
 function assertEqual(val1, val2, code, msg) {
   if (val1 != val2) {
+    throw new ValidErr(code, msg)
+  }
+}
+function assertNotEmptyStr(val, code, msg) {
+  if (val == null || val == undefined 
+	    || (typeof val == 'string' && val.trim().length == 0)) {
     throw new ValidErr(code, msg)
   }
 }
